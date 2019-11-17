@@ -3,16 +3,22 @@ const Dapp = require("../dapp");
 const verifyEth = require("../validation/ethValid");
 const verifyTwitter = require("../validation/twitterValid");
 
+const { token_address, owner_address } = require("../config/keys.js");
+
 router.post("/claim", async (req, res) => {
   const errors = {
     ethErrors: [],
     twitterErrors: []
   };
 
+  console.log(req.body);
+
   // get twitter
-  const twitterId = await verifyTwitter(req.body.tweet).catch(err => {
+
+  const twitterId = await verifyTwitter(req.body.retweet).catch(err => {
     return errors.twitterErrors.push(err);
   });
+
   // get ethAddress (just verify, essentially)
   const ethAddress = await verifyEth(req.body.ethAddress).catch(err => {
     return errors.ethErrors.push(err);
@@ -20,12 +26,13 @@ router.post("/claim", async (req, res) => {
 
   // if err, return
   if (!twitterId || !ethAddress) {
+    console.log("erroring");
     return res.status(400).json(errors);
   }
 
   const rsv = await Dapp.signAirdrop(
-    token,
-    owner,
+    token_address,
+    owner_address,
     ethAddress,
     100000,
     twitterId
@@ -36,12 +43,7 @@ router.post("/claim", async (req, res) => {
   return res.json(rsv);
 });
 
-router.get("/test", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+router.get("/test", async (req, res) => {
   console.log("got one");
   return res.json({ msg: "Success" });
 });
