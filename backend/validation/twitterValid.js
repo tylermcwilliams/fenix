@@ -3,6 +3,8 @@ const {
   token_twitter_account,
   token_twitter_status
 } = require("../config/keys");
+
+const Dapp = require("../dapp");
 const Twitter = require("twitter");
 
 const twitterApi = new Twitter(twitter_keys);

@@ -1,10 +1,22 @@
-const ethUtils = require("ethereumjs-util");
-const etherscan = require("etherscan-api");
-
 const { etherscan_key } = require("../config/keys");
 
+const Dapp = require("../dapp");
+const ethUtils = require("ethereumjs-util");
+const etherscan = require("etherscan-api").init(etherscan_key);
+
 async function verifyEth(ethAddress) {
-  return "0x44EC746062d6E4e2f6EE1d43bAF24E20B734E39A";
+  if (
+    !ethUtils.isValidAddress(ethAddress) ||
+    ethUtils.isZeroAddress(ethAddress)
+  ) {
+    throw "The ethereum address provided is invalid";
+  }
+
+  if (!Dapp.checkEthAddress(ethAddress)) {
+    throw "The ethereum address provided already participated";
+  }
+
+  return ethAddress;
 }
 
 module.exports = verifyEth;

@@ -31,9 +31,9 @@ contract Crowdsale is ReentrancyGuard {
     // BASE
 
     constructor (uint256 rate, address payable wallet, IERC20 token) public {
-        require(rate > 0, "Crowdsale: rate is 0");
-        require(wallet != address(0), "Crowdsale: wallet is the zero address");
-        require(address(token) != address(0), "Crowdsale: token is the zero address");
+        require(rate > 0);
+        require(wallet != address(0));
+        require(address(token) != address(0));
 
         _rate = rate;
         _wallet = wallet;
@@ -60,10 +60,17 @@ contract Crowdsale is ReentrancyGuard {
         return _weiRaised;
     }
 
+    function twitterInUse(uint256 twitterId) public view returns(bool){
+        return _twitters[twitterId];
+    }
+
+    function ethAddressInUse(address ethAddress) public view returns(bool){
+        return _addresses[ethAddress];
+    }
+
     // BUYING
 
     function buyTokens(address beneficiary) public nonReentrant payable {
-        
         uint256 weiAmount = msg.value;
         _preValidatePurchase(beneficiary, weiAmount);
 
@@ -77,12 +84,11 @@ contract Crowdsale is ReentrancyGuard {
         emit TokensPurchased(msg.sender, beneficiary, weiAmount, tokens);
 
         _forwardFunds();
-    
     }
 
     function _preValidatePurchase(address beneficiary, uint256 weiAmount) internal {
-        require(beneficiary != address(0), "Crowdsale: beneficiary is the zero address");
-        require(weiAmount != 0, "Crowdsale: weiAmount is 0");
+        require(beneficiary != address(0));
+        require(weiAmount != 0);
     }
 
     function _deliverTokens(address beneficiary, uint256 tokenAmount) internal {
