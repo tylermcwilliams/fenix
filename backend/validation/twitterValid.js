@@ -46,9 +46,6 @@ async function verifyTwitter(tweetLink) {
     twitterStatus.in_reply_to_status_id_str != token_twitter_status &&
     twitterStatus.quoted_status_id_str != token_twitter_status
   ) {
-    console.log(twitterStatus.in_reply_to_status_id_str);
-    console.log(twitterStatus.quoted_status_id_str);
-    console.log(token_twitter_status);
     throw "You did not retweet or reply to the correct status.";
   }
 

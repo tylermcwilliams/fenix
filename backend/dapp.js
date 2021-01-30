@@ -1,5 +1,5 @@
 const { master_key, infura_url } = require("./config/keys.js");
-const promoABI = require("../contracts/fenix_promo_abi.json");
+const promoABI = require("./contracts/fenix_promo_abi.json");
 
 const HDWalletProvider = require("truffle-hdwallet-provider");
 const eutil = require("ethereumjs-util");

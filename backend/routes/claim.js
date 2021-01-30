@@ -20,13 +20,13 @@ router.post("/claim", async (req, res) => {
   });
 
   // get ethAddress (just verify, essentially)
+  console.log(req.body.ethAddress);
   const ethAddress = await verifyEth(req.body.ethAddress).catch(err => {
     return errors.ethErrors.push(err);
   });
 
   // if err, return
-  if (!twitterId || !ethAddress) {
-    console.log("erroring");
+  if (errors.twitterErrors.length > 0 || errors.ethErrors.length > 0) {
     return res.status(400).json(errors);
   }
 
@@ -34,18 +34,13 @@ router.post("/claim", async (req, res) => {
     token_address,
     owner_address,
     ethAddress,
-    100000,
+    25000,
     twitterId
   ).catch(err => {
-    return res.status(400).json(err);
+    return res.status(400).send(err);
   });
 
-  return res.json(rsv);
-});
-
-router.get("/test", async (req, res) => {
-  console.log("got one");
-  return res.json({ msg: "Success" });
+  return res.json({ nonce: twitterId, ...rsv });
 });
 
 module.exports = router;
